@@ -1,14 +1,20 @@
 import skia
-from lib import Vector
 from shapes import Shape
 
 
 class Outline:
-    def __init__(self, shape:Shape, width:float=2, roundness:int=0, color:skia.Color4f=skia.ColorBLACK):
+    def __init__(self, shape:Shape, width:float=2, color:skia.Color4f=skia.ColorBLACK):
         self.width = width
-        self.paint = skia.Paint(Color = color)
-        self.path = skia.Path()
+        self.paint = skia.Paint(Color = color,
+                               Dither=True,
+                               Style=skia.Paint.kStroke_Style,
+                               StrokeWidth=width,
+                               AntiAlias=True,
+                                StrokeJoin=skia.Paint.kBevel_Join
+                                )
+        self.cap = skia.Paint.Cap()
         self.shape = shape
+        self.path = shape.path
         
     @property
     def shape(self) -> Shape:

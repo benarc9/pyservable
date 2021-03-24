@@ -1,11 +1,15 @@
 from typing import List
-from lib import *
 import abc
+
+import skia
+
+from lib import Vector
 
 
 class Shape(abc.ABC):
     def __init__(self):
-        pass
+        self.paint: skia.Paint = None
+        self.path: skia.Path = None
 
     @property
     def paint(self) -> skia.Paint:

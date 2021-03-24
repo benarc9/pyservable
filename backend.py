@@ -8,16 +8,12 @@ class GlfwWindow:
     def __init__(self, width:int=800, height:int=640):
         self.width = width
         self.height = height
-
-    @contextlib.contextmanager
-    def create_window(self):
-        if not glfw.init():
-            raise RuntimeError('Failed to initialize GLFW')
         glfw.window_hint(glfw.STENCIL_BITS, 8)
-        self.window = glfw.create_window(self.width, self.height, '', None, None)
+        self.window = glfw.create_window(self.width,
+                                         self.height,
+                                         '',
+                                         None, None)
         glfw.make_context_current(self.window)
-        yield self.window
-        glfw.terminate()
 
     @property
     def width(self):
@@ -36,20 +32,17 @@ class GlfwWindow:
         self._height = value
         
     @property
-    def window(self):
+    def window(self) -> glfw._GLFWwindow:
         return self._window
     
     @window.setter
-    def window(self, value):
+    def window(self, value: glfw._GLFWwindow):
         self._window = value
 
 
 class SkiaSurface:
-    def __init__(self, window:GlfwWindow):
+    def __init__(self, window: GlfwWindow):
         self.window = window
-
-    @contextlib.contextmanager
-    def create_surface(self):
         self.context = skia.GrDirectContext.MakeGL()
         self.render_target = skia.GrBackendRenderTarget(
             self.window.width,
@@ -65,38 +58,35 @@ class SkiaSurface:
             skia.kRGBA_8888_ColorType,
             skia.ColorSpace.MakeSRGB()
         )
-        assert self.surface is not None
-        yield self.surface
-        self.context.abandonContext()
 
     @property
-    def context(self):
+    def context(self) -> skia.GrDirectContext:
         return self._context
 
     @context.setter
-    def context(self, value):
+    def context(self, value: skia.GrDirectContext):
         self._context = value
 
     @property
-    def render_target(self):
+    def render_target(self) -> skia.GrBackendRenderTarget:
         return self._render_target
 
     @render_target.setter
-    def render_target(self, value):
+    def render_target(self, value: skia.GrBackendRenderTarget):
         self._render_target = value
 
     @property
-    def surface(self):
+    def surface(self) -> skia.Surface:
         return self._surface
 
     @surface.setter
-    def surface(self, value):
+    def surface(self, value: skia.Surface):
         self._surface = value
 
     @property
-    def window(self):
+    def window(self) -> GlfwWindow:
         return self._window
 
     @window.setter
-    def window(self, value):
+    def window(self, value: GlfwWindow):
         self._window = value
